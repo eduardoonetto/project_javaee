@@ -42,7 +42,12 @@
 
       <!-- Avatar -->
       <div class="dropdown">
-        <a
+        <%=
+    session.getAttribute("session_fname")
+    %>
+    <%=
+    session.getAttribute("session_lname")
+    %><a
           class="dropdown-toggle" 
           data-bs-toggle="dropdown" 
           aria-expanded="false"

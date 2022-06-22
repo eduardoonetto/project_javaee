@@ -19,12 +19,15 @@ public class UserDao
         this.cn = new Conexion();
     }
     
-    public boolean insert(final String email, final String password) {
-        final String inset = "INSERT INTO `usuarios` (`email`, `pass`) VALUES(?,?)";
+    public boolean insert(final String nombre, final String apellido, final String email, final String password) {
+        final String insert = "INSERT INTO `usuarios` (`nombre`,`apellido`,`email`, `pass`) VALUES(?,?,?,?)";
         try {
             this.con = this.cn.conectar();
-            (this.ps = this.con.prepareStatement(inset)).setString(1, email);
-            this.ps.setString(2, password);
+            this.ps = this.con.prepareStatement(insert);
+            this.ps.setString(1, nombre);
+            this.ps.setString(2, apellido);
+            this.ps.setString(3, email);
+            this.ps.setString(4, password);
             this.ps.executeUpdate();
             this.cn.desconectar();
             return true;
@@ -45,18 +48,22 @@ public class UserDao
         final User u = new User();
         try {
             this.con = this.cn.conectar();
-            (this.ps = this.con.prepareStatement(validar)).setString(1, email);
+            this.ps = this.con.prepareStatement(validar);
+            this.ps.setString(1, email);
             this.ps.setString(2, password);
             this.rs = this.ps.executeQuery();
             while (this.rs.next()) {
                 u.setId(this.rs.getInt("id"));
+                u.setNombre(this.rs.getString("nombre"));
+                u.setApellido(this.rs.getString("apellido"));
                 u.setEmail(this.rs.getString("email"));
-                u.setPassword(this.rs.getString("password"));
+                u.setPassword(this.rs.getString("pass"));
             }
             this.cn.desconectar();
             return u;
         }
         catch (Exception e) {
+            System.out.println(e);
             return null;
         }
         finally {
@@ -98,7 +105,8 @@ public class UserDao
         final String del = "DELETE FROM usuarios where id=?";
         try {
             this.con = this.cn.conectar();
-            (this.ps = this.con.prepareStatement(del)).setInt(1, id);
+            this.ps = this.con.prepareStatement(del);
+            this.ps.setInt(1, id);
             this.ps.executeUpdate();
             this.cn.desconectar();
             return true;
@@ -114,13 +122,16 @@ public class UserDao
         }
     }
     
-    public boolean edit(final int id, final String new_email, final String new_pass) {
+    public boolean edit(final int id, final String new_email, final String new_pass , final String new_name , final String new_apellido) {
         final String del = "UPDATE usuarios SET nombre=?, apellido=?, email=?, pass=? where id=?";
         try {
             this.con = this.cn.conectar();
-            (this.ps = this.con.prepareStatement(del)).setString(1, new_email);
-            this.ps.setString(2, new_pass);
-            this.ps.setInt(3, id);
+            this.ps = this.con.prepareStatement(del);
+            this.ps.setString(1, new_name);
+            this.ps.setString(2, new_apellido);
+            this.ps.setString(3, new_email);
+            this.ps.setString(4, new_pass);
+            this.ps.setInt(5, id);
             this.ps.executeUpdate();
             this.cn.desconectar();
             return true;
@@ -141,12 +152,13 @@ public class UserDao
         final String getById = "select * from usuarios where id=?";
         try {
             this.con = this.cn.conectar();
-            (this.ps = this.con.prepareStatement(getById)).setInt(1, id);
+            this.ps = this.con.prepareStatement(getById);
+            this.ps.setInt(1, id);
             this.rs = this.ps.executeQuery();
             while (this.rs.next()) {
                 u.id = this.rs.getInt("id");
-                u.email = this.rs.getString("nombre");
-                u.email = this.rs.getString("apellido");
+                u.nombre = this.rs.getString("nombre");
+                u.apellido = this.rs.getString("apellido");
                 u.email = this.rs.getString("email");
                 u.password = this.rs.getString("pass");
             }
