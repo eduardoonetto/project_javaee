@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public final class Conexion {
     public static final String USERNAME = "root";
-    public static final String PASSWORD = "Pelusa12";
+    public static final String PASSWORD = "";
     public static final String HOST = "localhost";
     public static final String PORT = "3306";
     public static final String DATABASE = "PRU";
